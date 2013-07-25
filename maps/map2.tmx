@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" width="20" height="20" tilewidth="32" tileheight="32">
  <tileset firstgid="1" name="Mage" tilewidth="32" tileheight="32">
-  <image source="res/tileset/magecity.png" width="256" height="1450"/>
+  <image source="../res/tileset/magecity.png" width="256" height="1450"/>
  </tileset>
  <layer name="Terrain" width="20" height="20">
   <data>
