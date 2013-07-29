@@ -1,0 +1,38 @@
+========================
+= Viable Layout System =
+========================
+
+InitialRenderer(self, surface) : Fills the self.boxcollider and self.maskcollider + Rendering
+BasicRenderer(self, surface) : Render tiles and animates them
+→ Avoid refill of boxcollider and maskcollider on each loop
+
+=================							================
+= Display Stack =							= Enhancements =
+=================							================
+											Animating Terrain
+---------------								Animating Objects
+- Upper Layer -
+---------------
+	Optionnal but useful
+	No Collisions at all
+
+-------------------
+- Over Char Layer -
+-------------------
+	No collisions
+
+--------------
+- Char Layer -
+--------------
+	Collisions with other NPCs
+	Collisions with clickable objects ?
+
+-----------------
+- Objects Layer -
+-----------------
+	Collisions : Alpha or Square
+
+-----------------
+- Terrain Layer -
+-----------------
+	Collision : True or False with Square
