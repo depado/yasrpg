@@ -1,0 +1,12 @@
+<heroclass name="Black Mage">
+	<skills level="1">
+		<skill name="Fire" damage="10" cost="5" element="fire" targets="single"/>
+		<skill name="Ice" damage="10" cost="5" element="ice" targets="single"/>
+	</skills>
+	<skills level="2">
+		<skill name="Fire+" damage="15" cost="5" element="fire" targets="single"/>
+		<skill name="Ice+" damage="15" cost="5" element="ice" targets="single"/>
+	</skills>
+</heroclass>
+
+<!-- root[0][0].attrib['name']...-->

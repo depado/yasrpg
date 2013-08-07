@@ -8,7 +8,7 @@ class Hero(pygame.sprite.Sprite):
 
     def __init__(self, name="Angus", charset="../res/charsets/captain.png"):
         # Non displayable
-        self.position = pygame.Rect(5, 5, 32, 32)
+        self.position = pygame.Rect(500, 500, 32, 32)
         self.collision = pygame.Rect(self.position.x+3, self.position.y+16, 26, 16)
         self.index = 0
         self.direction = DIRECTIONS['down']
@@ -17,6 +17,15 @@ class Hero(pygame.sprite.Sprite):
         # In game Infos
         self.name = name
         self.level = 1
+        self.maxhp = 100
+        self.hp = 100
+        self.maxmp = 50
+        self.mp = 50
+        self.str = 1
+        self.int = 1
+        self.dex = 1
+        self.defense = 1
+        self.mdefense = 1
         # Animations
         self.up_anim = []
         self.down_anim = []
@@ -24,6 +33,10 @@ class Hero(pygame.sprite.Sprite):
         self.left_anim = []
         self.set_file(charset)
         self.image = self.down_anim[0]
+
+    def reset_animation(self):
+        self.index = 0
+        self.timer = 0
 
     def extract_sprite(self, size, file, pos=(0,0)):
         sheet = pygame.image.load(file).convert_alpha() 

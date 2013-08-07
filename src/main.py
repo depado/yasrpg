@@ -2,6 +2,8 @@
 
 from classes.tiled import TiledRenderer
 from classes.hero import Hero
+from classes.cursor import Cursor
+from classes.menu import Menu
 import classes.settings as settings
 import sys
 import pygame
@@ -10,52 +12,28 @@ import math
 
 CHARSET_DIR = settings.CHARSET_DIR
 MAPS_DIR = settings.MAPS_DIR
-FONT = settings.FONT
-FONT_SIZE = settings.FONT_SIZE
+IMAGES_DIR = settings.IMAGES_DIR
 DIRECTIONS = settings.DIRECTIONS
 pygame.init()
 screen = pygame.display.set_mode((640, 640))
 screen_buf = pygame.Surface(screen.get_size())
-font = pygame.font.Font(FONT, FONT_SIZE)
 clock = pygame.time.Clock()
 angus = Hero()
+hawk = Hero(name="Hawk")
+hello = Hero(name="Hello")
+world = Hero(name="World")
+team = [angus, hawk, hello, world]
 
-class Menu(object):
-    """docstring for Menu"""
-    def __init__(self):
-        self.menu_items = ['Items','Equip','Magic','Status','Save','Close','Quit']
-        
-    def open_menu(self):
-        menu = True
-        pygame.key.set_repeat()
-        while menu:
-            for event in pygame.event.get():
-                if event.type == KEYDOWN:
-                    if event.key == K_ESCAPE:
-                        menu = False
+hawk.hp -= 27 
+hawk.level = 15
 
-            self.render_char(angus)
-            self.render_menu()
-            pygame.transform.scale(screen_buf, screen.get_size(), screen)
-            pygame.display.flip()
-            clock.tick(60)
-        pygame.key.set_repeat(1,5)
+hello.hp = 1
+hello.level = 2
 
-    def render_menu(self):
-        pos = 5
-        for item in self.menu_items:
-            screen_buf.blit(font.render(item, 4, (255,255,255)), (screen_buf.get_width()-100,pos))
-            pos += 15
+world.hp = 10
+world.maxhp = 2000
+world.level = 32
 
-
-    def render_char(self, char):
-        char.update()
-        screen_buf.blit(char.image, pygame.Rect(5,5,32,32))
-        screen_buf.blit(font.render(str(char.name), 4,(255,255,255)), (50, 5))
-        screen_buf.blit(font.render("Level : "+str(char.level), 4,(255,255,255)), (50, 20))
-
-
-menu = Menu()
 class Game(object):
     """ The main Game Class """
     def __init__(self):
@@ -121,6 +99,7 @@ class Game(object):
                             angus.collision.y += 2
 
                     elif (event.key == K_ESCAPE):
+                        menu = Menu(screen, team)
                         menu.open_menu()
 
                 if event.type == QUIT: run = False 
