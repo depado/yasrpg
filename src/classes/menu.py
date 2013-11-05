@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+# File menu.py
+
 import pygame
 from pygame.locals import *
 from cursor import Cursor
@@ -5,9 +8,10 @@ from settings import IMAGES_DIR, DIRECTIONS, FONT, FONT_SIZE
 
 class Menu(object):
     """docstring for Menu"""
-    def __init__(self, screen, team):
+    def __init__(self, screen, team, bag):
         self.clock = pygame.time.Clock()
         self.team = team
+        self.bag = bag
         self.screen = screen
         self.buffer = pygame.Surface(self.screen.get_size())
         self.font = pygame.font.Font(FONT, FONT_SIZE)
@@ -20,6 +24,7 @@ class Menu(object):
     def open_menu(self):
         old_direction = self.team[0].direction
         self.team[0].direction = DIRECTIONS['down']
+        self.reset_animation_team()
         menu = True
         pygame.key.set_repeat()
         while menu:
@@ -32,6 +37,8 @@ class Menu(object):
                     if event.key == K_UP:
                         self.cursor.move_up()
                     if event.key == K_RETURN:
+                        if self.cursor.position.y == 5:
+                            self.open_items()
                         if self.cursor.position.y == 30:
                             self.open_equipment()
                         if self.cursor.position.y == 55:
@@ -74,6 +81,10 @@ class Menu(object):
             self.render_char(char, pos, animate)
             pos += 1
 
+    def reset_animation_team(self):
+        for char in self.team:
+            char.reset_animation()
+
     def render_char(self, char, pos, animate=True):
         if pos == 1:
             basey = 15
@@ -87,9 +98,9 @@ class Menu(object):
             char.update()
         self.buffer.blit(char.image, pygame.Rect(20, basey, 32, 32))
         self.buffer.blit(self.font.render(str(char.name), 0,(255,255,255)), (60, basey))
-        self.buffer.blit(self.font.render("HP : "+str(char.hp)+" / "+str(char.maxhp), 0,(255,255,255)), (210, basey))
-        self.buffer.blit(self.font.render("MP : "+str(char.mp)+" / "+str(char.maxmp), 0,(255,255,255)), (210, basey+15))
-        self.buffer.blit(self.font.render("Level : "+str(char.level), 0,(255,255,255)), (60, basey+15))
+        self.buffer.blit(self.font.render("HP : "+str(char.stats.hp)+" / "+str(char.stats.maxhp), 0,(255,255,255)), (210, basey))
+        self.buffer.blit(self.font.render("MP : "+str(char.stats.mp)+" / "+str(char.stats.maxmp), 0,(255,255,255)), (210, basey+15))
+        self.buffer.blit(self.font.render("Level : "+str(char.stats.level), 0,(255,255,255)), (60, basey+15))
 
     def save(self):
         # Save function goes here !
@@ -108,6 +119,38 @@ class Menu(object):
             pygame.transform.scale(self.buffer, self.screen.get_size(), self.screen)
             pygame.display.flip()
             self.clock.tick(60)
+
+    def open_items(self):
+        # Open Items
+        menu = True
+        positions = len(self.bag.useable)
+        itemcursor = Cursor(ypos=[25, 85, 145, 205], xpos=[0, 50, 100])
+        while menu:
+            for event in pygame.event.get():
+                if event.type == KEYDOWN:
+                    if event.key == K_ESCAPE:
+                        menu = False
+                    if event.key == K_DOWN:
+                        itemcursor.move_down()
+                    if event.key == K_UP:
+                        itemcursor.move_up()
+                    if event.key == K_RIGHT:
+                        itemcursor.move_right()
+                    if event.key == K_LEFT:
+                        itemcursor.move_left()
+
+            self.buffer.blit(self.menu_image, (0,0))
+            posy = 5
+            for item in self.bag.useable:
+                if item.quantity > 0:
+                    self.buffer.blit(self.font.render("%s x%s" % (item.name, item.quantity), 0,(255,255,255)), (5, posy))
+                    posy += 10
+            itemcursor.update()
+            self.buffer.blit(itemcursor.image, itemcursor.position)
+            pygame.transform.scale(self.buffer, self.screen.get_size(), self.screen)
+            pygame.display.flip()
+            self.clock.tick(60)
+
 
     def open_magic(self):
         # MAGIC ! TODO
@@ -189,16 +232,16 @@ class Menu(object):
             self.render_char(char, 1)
             self.buffer.blit(self.font.render("Skills", 0,(255,255,255)), (60, 45))
             self.buffer.blit(self.font.render("Stats", 0,(255,255,255)), (60, 60))
-            self.buffer.blit(self.font.render("Strength : %d" % char.str, 0,(255,255,255)), (60, 75))
-            self.buffer.blit(self.font.render("Defense : %d" % char.defense, 0,(255,255,255)), (300, 75))
-            self.buffer.blit(self.font.render("Intelligence : %d" % char.int, 0,(255,255,255)), (60, 90))
-            self.buffer.blit(self.font.render("Magic Defense : %d" % char.mdefense, 0,(255,255,255)), (300, 90))
-            self.buffer.blit(self.font.render("Dexterity : %d" % char.dex, 0,(255,255,255)), (60, 105))
+            self.buffer.blit(self.font.render("Strength : %d" % char.stats.str, 0,(255,255,255)), (60, 75))
+            self.buffer.blit(self.font.render("Defense : %d" % char.stats.defense, 0,(255,255,255)), (300, 75))
+            self.buffer.blit(self.font.render("Intelligence : %d" % char.stats.int, 0,(255,255,255)), (60, 90))
+            self.buffer.blit(self.font.render("Magic Defense : %d" % char.stats.mdefense, 0,(255,255,255)), (300, 90))
+            self.buffer.blit(self.font.render("Dexterity : %d" % char.stats.dex, 0,(255,255,255)), (60, 105))
             pygame.transform.scale(self.buffer, self.screen.get_size(), self.screen)
             pygame.display.flip()
             self.clock.tick(60)
 
-        for char in self.team:
-            char.reset_animation()
+        self.reset_animation_team()
+        
 
 

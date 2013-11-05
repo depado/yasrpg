@@ -18,7 +18,6 @@ class Cursor(object):
 
 	def update(self):
 		self.timer += 1
-		self.position.y = self.ypos[self.yposindex]
 		if self.timer > self.update_time:
 			self.timer = 0
 			if self.index in xrange(0,2):
@@ -33,10 +32,27 @@ class Cursor(object):
 			self.yposindex -= 1
 		else:
 			self.yposindex = len(self.ypos)-1
+		self.position.y = self.ypos[self.yposindex]
 
 	def move_down(self):
 		if self.yposindex+1 < len(self.ypos):
 			self.yposindex += 1
 		else:
 			self.yposindex = 0
+		self.position.y = self.ypos[self.yposindex]
+
+	def move_left(self):
+		if self.xposindex > 0:
+			self.xposindex -= 1
+		else:
+			self.xposindex = len(self.xpos)-1
+		self.position.x = self.xpos[self.xposindex]
+
+	def move_right(self):
+		if self.xposindex+1 < len(self.xpos):
+			self.xposindex += 1
+		else:
+			self.xposindex = 0
+		self.position.x = self.xpos[self.xposindex]
+
 

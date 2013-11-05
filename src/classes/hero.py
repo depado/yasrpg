@@ -1,5 +1,6 @@
 import pygame
 from settings import DIRECTIONS
+from stats import Stats
 
 class Hero(pygame.sprite.Sprite):
     """
@@ -15,17 +16,8 @@ class Hero(pygame.sprite.Sprite):
         self.UPDATE_TIME = 10
         self.timer = 0
         # In game Infos
+        self.stats = Stats()
         self.name = name
-        self.level = 1
-        self.maxhp = 100
-        self.hp = 100
-        self.maxmp = 50
-        self.mp = 50
-        self.str = 1
-        self.int = 1
-        self.dex = 1
-        self.defense = 1
-        self.mdefense = 1
         # Animations
         self.up_anim = []
         self.down_anim = []

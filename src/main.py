@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
+# File main.py
 
 from classes.tiled import TiledRenderer
 from classes.hero import Hero
 from classes.cursor import Cursor
 from classes.menu import Menu
+from classes.inventory import Item, Bag
 import classes.settings as settings
 import sys
 import pygame
@@ -23,16 +25,22 @@ hawk = Hero(name="Hawk")
 hello = Hero(name="Hello")
 world = Hero(name="World")
 team = [angus, hawk, hello, world]
+bag = Bag()
+randobject = Item(name="Random !", quantity=2, effect="None")
+bag.useable.append(randobject)
 
-hawk.hp -= 27 
-hawk.level = 15
+for item in bag.useable:
+    print("Name : %s\nQuantity : %s\nEffect : %s" % (item.name, item.quantity, item.effect))
 
-hello.hp = 1
-hello.level = 2
+hawk.stats.hp -= 10
+hawk.stats.level = 15
 
-world.hp = 10
-world.maxhp = 2000
-world.level = 32
+hello.stats.hp = 1
+hello.stats.level = 2
+
+world.stats.hp = 10
+world.stats.maxhp = 2000
+world.stats.level = 32
 
 class Game(object):
     """ The main Game Class """
@@ -99,7 +107,7 @@ class Game(object):
                             angus.collision.y += 2
 
                     elif (event.key == K_ESCAPE):
-                        menu = Menu(screen, team)
+                        menu = Menu(screen, team, bag)
                         menu.open_menu()
 
                 if event.type == QUIT: run = False 
