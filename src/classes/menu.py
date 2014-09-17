@@ -25,7 +25,7 @@ class Menu(object):
         old_direction = self.team[0].direction
         self.team[0].direction = DIRECTIONS['down']
         self.reset_animation_team()
-        menu = True
+        menu = continue_game = True
         pygame.key.set_repeat()
         while menu:
             for event in pygame.event.get():
@@ -50,7 +50,7 @@ class Menu(object):
                         if self.cursor.position.y == 130:
                             menu = False
                         if self.cursor.position.y == 155:
-                            pygame.quit()
+                            menu = continue_game = False
 
             self.buffer.blit(self.menu_image, (0,0))
             self.render_menu()
@@ -62,6 +62,8 @@ class Menu(object):
         pygame.key.set_repeat(1,5)
         self.team[0].direction = old_direction
         self.team[0].update_now()
+
+        return continue_game
 
 
     def render_menu(self):
