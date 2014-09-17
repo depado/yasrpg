@@ -3,8 +3,8 @@
 
 import pygame
 from pygame.locals import *
-from cursor import Cursor
-from settings import IMAGES_DIR, DIRECTIONS, FONT, FONT_SIZE
+from .cursor import Cursor
+from .settings import IMAGES_DIR, DIRECTIONS, FONT, FONT_SIZE
 
 class Menu(object):
     """docstring for Menu"""

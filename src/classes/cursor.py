@@ -20,9 +20,9 @@ class Cursor(object):
 		self.timer += 1
 		if self.timer > self.update_time:
 			self.timer = 0
-			if self.index in xrange(0,2):
+			if self.index in range(0,2):
 				self.position.x += 1
-			elif self.index in xrange(3,5):
+			elif self.index in range(3,5):
 				self.position.x -= 1
 			self.index += 1
 			if self.index == 10: self.index = 0

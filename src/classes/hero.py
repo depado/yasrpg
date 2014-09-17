@@ -1,6 +1,6 @@
 import pygame
-from settings import DIRECTIONS
-from stats import Stats
+from .settings import DIRECTIONS
+from .stats import Stats
 
 class Hero(pygame.sprite.Sprite):
     """
@@ -40,7 +40,7 @@ class Hero(pygame.sprite.Sprite):
     def set_file(self, newfile):
         """ Change the file for the char"""
         self.file = newfile
-        for x in xrange(0,2):
+        for x in range(0,2):
             self.down_anim.append(self.extract_sprite(32, self.file, (x, DIRECTIONS['down'])))
             self.up_anim.append(self.extract_sprite(32, self.file, (x, DIRECTIONS['up'])))
             self.left_anim.append(self.extract_sprite(32, self.file, (x, DIRECTIONS['left'])))
