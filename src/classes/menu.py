@@ -4,7 +4,7 @@
 import pygame
 from pygame.locals import *
 from .cursor import Cursor
-from .settings import IMAGES_DIR, DIRECTIONS, FONT, FONT_SIZE
+from .settings import *
 
 TBK = (255, 255, 255)   # Black color tuple.
 

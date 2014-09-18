@@ -6,16 +6,12 @@ from classes.hero import Hero
 from classes.cursor import Cursor
 from classes.menu import Menu
 from classes.inventory import Item, Bag
-import classes.settings as settings
+from classes.settings import *
 import sys
 import pygame
 from pygame.locals import *
 import math
 
-CHARSET_DIR = settings.CHARSET_DIR
-MAPS_DIR = settings.MAPS_DIR
-IMAGES_DIR = settings.IMAGES_DIR
-DIRECTIONS = settings.DIRECTIONS
 pygame.init()
 screen = pygame.display.set_mode((640, 640))
 screen_buf = pygame.Surface(screen.get_size())
@@ -127,5 +123,5 @@ class Game(object):
         pygame.quit()
 
 game = Game()
-game.game(MAPS_DIR+"map.tmx")
+game.game(MAPS_DIR + "map.tmx")
 game.quit()
