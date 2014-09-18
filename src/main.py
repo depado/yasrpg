@@ -59,8 +59,8 @@ class Game(object):
                 event = pygame.event.wait()
                 if event.type == KEYDOWN:
                     if (event.key == K_LEFT):
-                        if angus.direction != DIRECTIONS['left']:
-                            angus.direction = DIRECTIONS['left']
+                        if angus.direction != DIR_LEFT:
+                            angus.direction = DIR_LEFT
                             angus.update_now()
                         else:
                             angus.update()
@@ -71,8 +71,8 @@ class Game(object):
 
                     # KEY RIGHT
                     elif (event.key == K_RIGHT):
-                        if angus.direction != DIRECTIONS['right']:
-                            angus.direction = DIRECTIONS['right']
+                        if angus.direction != DIR_RIGHT:
+                            angus.direction = DIR_RIGHT
                             angus.update_now()
                         else:
                             angus.update()
@@ -83,8 +83,8 @@ class Game(object):
 
                     # KEY UP
                     elif (event.key == K_UP):
-                        if angus.direction != DIRECTIONS['up']:
-                            angus.direction = DIRECTIONS['up']
+                        if angus.direction != DIR_UP:
+                            angus.direction = DIR_UP
                             angus.update_now()
                         else:
                             angus.update()
@@ -95,8 +95,8 @@ class Game(object):
 
                     # KEY DOWN        
                     elif (event.key == K_DOWN):
-                        if angus.direction != DIRECTIONS['down']:
-                            angus.direction = DIRECTIONS['down']
+                        if angus.direction != DIR_DOWN:
+                            angus.direction = DIR_DOWN
                             angus.update_now()
                         else:
                             angus.update()

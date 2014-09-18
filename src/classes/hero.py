@@ -1,5 +1,5 @@
 import pygame
-from .settings import DIRECTIONS
+from .settings import DIR_DOWN, DIR_LEFT, DIR_RIGHT, DIR_RIGHT, DIR_UP
 from .stats import Stats
 
 class Hero(pygame.sprite.Sprite):
@@ -13,7 +13,7 @@ class Hero(pygame.sprite.Sprite):
         self.collision = pygame.Rect(self.position.x + 3,
                                      self.position.y + 16, 26, 16)
         self.index = 0
-        self.direction = DIRECTIONS['down']
+        self.direction = DIR_DOWN
         self.UPDATE_TIME = 10
         self.timer = 0
         # In game Infos
@@ -31,7 +31,7 @@ class Hero(pygame.sprite.Sprite):
         self.index = 0
         self.timer = 0
 
-    def extract_sprite(self, size, file, pos=(0,0)):
+    def extract_sprite(self, size, file, pos=(0, 0)):
         sheet = pygame.image.load(file).convert_alpha() 
         sheet_rect = sheet.get_rect()
         sheet.set_clip(pygame.Rect(pos[0]*size, pos[1]*size, size, size))
@@ -41,11 +41,11 @@ class Hero(pygame.sprite.Sprite):
     def set_file(self, newfile):
         """ Change the file for the char"""
         self.file = newfile
-        for x in range(0,2):
-            self.down_anim.append(self.extract_sprite(32, self.file, (x, DIRECTIONS['down'])))
-            self.up_anim.append(self.extract_sprite(32, self.file, (x, DIRECTIONS['up'])))
-            self.left_anim.append(self.extract_sprite(32, self.file, (x, DIRECTIONS['left'])))
-            self.right_anim.append(self.extract_sprite(32, self.file, (x, DIRECTIONS['right'])))
+        for x in range(0, 2):
+            self.down_anim.append(self.extract_sprite(32, self.file, (x, DIR_DOWN)))
+            self.up_anim.append(self.extract_sprite(32, self.file, (x, DIR_UP)))
+            self.left_anim.append(self.extract_sprite(32, self.file, (x, DIR_LEFT)))
+            self.right_anim.append(self.extract_sprite(32, self.file, (x, DIR_RIGHT)))
 
     def update(self):
         self.timer += 1
@@ -54,24 +54,24 @@ class Hero(pygame.sprite.Sprite):
             self.timer = 0
             if self.index >= 2:
                 self.index = 0
-            if self.direction == DIRECTIONS['down']:
+            if self.direction == DIR_DOWN:
                 self.image = self.down_anim[self.index]
-            elif self.direction == DIRECTIONS['up']:
+            elif self.direction == DIR_UP:
                 self.image = self.up_anim[self.index]
-            elif self.direction == DIRECTIONS['left']:
+            elif self.direction == DIR_LEFT:
                 self.image = self.left_anim[self.index]
-            elif self.direction == DIRECTIONS['right']:
+            elif self.direction == DIR_RIGHT:
                 self.image = self.right_anim[self.index]
 
     def update_now(self):
         self.index += 1
         if self.index >= 2:
             self.index = 0
-        if self.direction == DIRECTIONS['down']:
+        if self.direction == DIR_DOWN:
             self.image = self.down_anim[self.index]
-        elif self.direction == DIRECTIONS['up']:
+        elif self.direction == DIR_UP:
             self.image = self.up_anim[self.index]
-        elif self.direction == DIRECTIONS['left']:
+        elif self.direction == DIR_LEFT:
             self.image = self.left_anim[self.index]
-        elif self.direction == DIRECTIONS['right']:
+        elif self.direction == DIR_RIGHT:
             self.image = self.right_anim[self.index]

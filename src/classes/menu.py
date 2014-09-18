@@ -27,7 +27,7 @@ class Menu(object):
 
     def open_menu(self):
         old_direction = self.team[0].direction
-        self.team[0].direction = DIRECTIONS['down']
+        self.team[0].direction = DIR_DOWN
         self.reset_animation_team()
 
         menu = continue_game = True
