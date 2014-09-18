@@ -49,7 +49,7 @@ class Hero(pygame.sprite.Sprite):
     def update(self, direction=None):
         if direction is None:
             direction = self.direction
-        if not valid_dir(direction):
+        elif not valid_dir(direction):
             pass
 
         if self.direction != direction:
@@ -58,18 +58,8 @@ class Hero(pygame.sprite.Sprite):
         else:
             self.timer += 1
             if self.timer >= self.UPDATE_TIME:
-                self.index += 1
                 self.timer = 0
-                if self.index >= 2:
-                    self.index = 0
-                if self.direction == DIR_DOWN:
-                    self.image = self.down_anim[self.index]
-                elif self.direction == DIR_UP:
-                    self.image = self.up_anim[self.index]
-                elif self.direction == DIR_LEFT:
-                    self.image = self.left_anim[self.index]
-                elif self.direction == DIR_RIGHT:
-                    self.image = self.right_anim[self.index]
+                self.update_now()
 
     def update_now(self):
         self.index += 1
@@ -104,7 +94,7 @@ class Hero(pygame.sprite.Sprite):
     def move(self, direction=None):
         if direction == None:
             direction = self.direction
-        if not valid_dir(direction):
+        elif not valid_dir(direction):
             pass
 
         if direction == DIR_DOWN:
