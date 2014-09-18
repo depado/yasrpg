@@ -108,9 +108,9 @@ class Game(object):
 
                     elif (event.key == K_ESCAPE):
                         menu = Menu(screen, team, bag)
-                        menu.open_menu()
+                        run = menu.open_menu()
 
-                if event.type == QUIT: run = False 
+                if event.type == QUIT: run = False
 
             except KeyboardInterrupt:
                 run = False
