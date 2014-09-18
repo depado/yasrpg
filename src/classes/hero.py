@@ -40,11 +40,23 @@ class Hero(pygame.sprite.Sprite):
     def set_file(self, newfile):
         """ Change the file for the char"""
         self.file = newfile
+        self.down_anim = self.up_anim = self.left_anim = self.right_anim = []
         for x in range(0, 2):
             self.down_anim.append(self.extract_sprite(32, self.file, (x, DIR_DOWN)))
             self.up_anim.append(self.extract_sprite(32, self.file, (x, DIR_UP)))
             self.left_anim.append(self.extract_sprite(32, self.file, (x, DIR_LEFT)))
             self.right_anim.append(self.extract_sprite(32, self.file, (x, DIR_RIGHT)))
+
+    @property
+    def collidebox(self):
+        if self.direction == DIR_DOWN:  # x+3 by default, here -2.  y+16 by default, here +2.
+            return pygame.Rect(self.position.x+3, self.position.y+18, 26, 16)
+        if self.direction == DIR_LEFT:
+            return pygame.Rect(self.position.x+1, self.position.y+16, 26, 16)
+        if self.direction == DIR_RIGHT: # x+3 by default, here +2.
+            return pygame.Rect(self.position.x+5, self.position.y+16, 26, 16)
+        if self.direction == DIR_UP:    #              y+16 by default, here -2.
+            return pygame.Rect(self.position.x+3, self.position.y+14, 26, 16)
 
     def update(self, direction=None):
         if direction is None:
@@ -77,19 +89,8 @@ class Hero(pygame.sprite.Sprite):
     def collidelist(self, collisionlist):
         return self.collidebox.collidelist(collisionlist)
 
-    @property
-    def collidebox(self):
-        if self.direction == DIR_DOWN:  # x+3 by default, here -2.  y+16 by default, here +2.
-            return pygame.Rect(self.position.x+3, self.position.y+18, 26, 16)
-        if self.direction == DIR_LEFT:
-            return pygame.Rect(self.position.x+1, self.position.y+16, 26, 16)
-        if self.direction == DIR_RIGHT: # x+3 by default, here +2.
-            return pygame.Rect(self.position.x+5, self.position.y+16, 26, 16)
-        if self.direction == DIR_UP:    #              y+16 by default, here -2.
-            return pygame.Rect(self.position.x+3, self.position.y+14, 26, 16)
-
-
     #def collide_neighbours(self, tiledmap): TODO
+
 
     def move(self, direction=None):
         if direction == None:
