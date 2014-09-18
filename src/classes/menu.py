@@ -98,14 +98,7 @@ class Menu(object):
             char.reset_animation()
 
     def render_char(self, char, pos, animate=True):
-        if pos == 1:
-            basey = 15
-        if pos == 2:
-            basey = 75
-        if pos == 3:
-            basey = 135
-        if pos == 4:
-            basey = 195
+        basey = (pos-1)*60 + 15
         if animate:
             char.update()
 

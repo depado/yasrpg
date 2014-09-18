@@ -37,11 +37,13 @@ class Hero(pygame.sprite.Sprite):
         sheet.set_clip(pygame.Rect(pos[0]*size, pos[1]*size, size, size))
         return sheet.subsurface(sheet.get_clip())
 
-    def set_file(self, newfile):
+    def set_file(self, newfile, nb_anim=2):
         """ Change the file for the char"""
         self.file = newfile
-        self.down_anim = self.up_anim = self.left_anim = self.right_anim = []
-        for x in range(0, 2):
+        self.down_anim, self.up_anim = [], []
+        self.left_anim, self.right_anim = [], []
+
+        for x in range(0, nb_anim):
             self.down_anim.append(self.extract_sprite(32, self.file, (x, DIR_DOWN)))
             self.up_anim.append(self.extract_sprite(32, self.file, (x, DIR_UP)))
             self.left_anim.append(self.extract_sprite(32, self.file, (x, DIR_LEFT)))
