@@ -25,8 +25,8 @@ bag = Bag()
 randobject = Item(name="Random !", quantity=2, effect="None")
 bag.useable.append(randobject)
 
-for item in bag.useable:
-    print("Name : %s\nQuantity : %s\nEffect : %s" % (item.name, item.quantity, item.effect))
+#for item in bag.useable:
+#    print("Name : %s\nQuantity : %s\nEffect : %s" % (item.name, item.quantity, item.effect))
 
 hawk.stats.hp -= 10
 hawk.stats.level = 15
@@ -54,54 +54,30 @@ class Game(object):
             try:
                 event = pygame.event.wait()
                 if event.type == KEYDOWN:
+                    arrow_pressed = False
                     if (event.key == K_LEFT):
-                        if angus.direction != DIR_LEFT:
-                            angus.direction = DIR_LEFT
-                            angus.update_now()
-                        else:
-                            angus.update()
-                        testrect = pygame.Rect(angus.collision.x-2, angus.collision.y, 26, 16 )
-                        if testrect.collidelist(formosa.boxcollider) == -1:
-                            angus.position.x -= 2
-                            angus.collision.x -= 2
+                        angus.update(DIR_LEFT)
+                        arrow_pressed = True
 
                     # KEY RIGHT
-                    elif (event.key == K_RIGHT):
-                        if angus.direction != DIR_RIGHT:
-                            angus.direction = DIR_RIGHT
-                            angus.update_now()
-                        else:
-                            angus.update()
-                        testrect = pygame.Rect(angus.collision.x+2, angus.collision.y, 26, 16 )
-                        if testrect.collidelist(formosa.boxcollider) == -1:
-                            angus.position.x += 2
-                            angus.collision.x += 2
+                    if (event.key == K_RIGHT):
+                        angus.update(DIR_RIGHT)
+                        arrow_pressed = True
 
                     # KEY UP
-                    elif (event.key == K_UP):
-                        if angus.direction != DIR_UP:
-                            angus.direction = DIR_UP
-                            angus.update_now()
-                        else:
-                            angus.update()
-                        testrect = pygame.Rect(angus.collision.x, angus.collision.y-2, 26, 16 )
-                        if testrect.collidelist(formosa.boxcollider) == -1:
-                            angus.position.y -= 2
-                            angus.collision.y -= 2
+                    if (event.key == K_UP):
+                        angus.update(DIR_UP)
+                        arrow_pressed = True
 
                     # KEY DOWN        
-                    elif (event.key == K_DOWN):
-                        if angus.direction != DIR_DOWN:
-                            angus.direction = DIR_DOWN
-                            angus.update_now()
-                        else:
-                            angus.update()
-                        testrect = pygame.Rect(angus.collision.x, angus.collision.y+2, 26, 16 )
-                        if testrect.collidelist(formosa.boxcollider) == -1:
-                            angus.position.y += 2
-                            angus.collision.y += 2
+                    if (event.key == K_DOWN):
+                        angus.update(DIR_DOWN)
+                        arrow_pressed = True
 
-                    elif (event.key == K_ESCAPE):
+                    if arrow_pressed and angus.collidelist(formosa.boxcollider) == -1:
+                        angus.move()
+
+                    if (event.key == K_ESCAPE):
                         menu = Menu(screen, team, bag)
                         run = menu.open_menu()
 

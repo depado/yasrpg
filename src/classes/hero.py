@@ -1,5 +1,5 @@
 import pygame
-from .settings import DIR_DOWN, DIR_LEFT, DIR_RIGHT, DIR_RIGHT, DIR_UP
+from .settings import DIR_DOWN, DIR_LEFT, DIR_RIGHT, DIR_RIGHT, DIR_UP, valid_dir
 from .stats import Stats
 
 class Hero(pygame.sprite.Sprite):
@@ -10,8 +10,8 @@ class Hero(pygame.sprite.Sprite):
     def __init__(self, name="Angus", charset="../res/charsets/captain.png"):
         # Non displayable
         self.position = pygame.Rect(500, 500, 32, 32)
-        self.collision = pygame.Rect(self.position.x + 3,
-                                     self.position.y + 16, 26, 16)
+        #self.collidebox = pygame.Rect(self.position.x + 3,
+        #                              self.position.y + 16, 26, 16)
         self.index = 0
         self.direction = DIR_DOWN
         self.UPDATE_TIME = 10
@@ -35,8 +35,7 @@ class Hero(pygame.sprite.Sprite):
         sheet = pygame.image.load(file).convert_alpha() 
         sheet_rect = sheet.get_rect()
         sheet.set_clip(pygame.Rect(pos[0]*size, pos[1]*size, size, size))
-        sprite = sheet.subsurface(sheet.get_clip())
-        return sprite
+        return sheet.subsurface(sheet.get_clip())
 
     def set_file(self, newfile):
         """ Change the file for the char"""
@@ -47,21 +46,30 @@ class Hero(pygame.sprite.Sprite):
             self.left_anim.append(self.extract_sprite(32, self.file, (x, DIR_LEFT)))
             self.right_anim.append(self.extract_sprite(32, self.file, (x, DIR_RIGHT)))
 
-    def update(self):
-        self.timer += 1
-        if self.timer >= self.UPDATE_TIME:
-            self.index += 1
-            self.timer = 0
-            if self.index >= 2:
-                self.index = 0
-            if self.direction == DIR_DOWN:
-                self.image = self.down_anim[self.index]
-            elif self.direction == DIR_UP:
-                self.image = self.up_anim[self.index]
-            elif self.direction == DIR_LEFT:
-                self.image = self.left_anim[self.index]
-            elif self.direction == DIR_RIGHT:
-                self.image = self.right_anim[self.index]
+    def update(self, direction=None):
+        if direction is None:
+            direction = self.direction
+        if not valid_dir(direction):
+            pass
+
+        if self.direction != direction:
+            self.direction = direction
+            self.update_now()
+        else:
+            self.timer += 1
+            if self.timer >= self.UPDATE_TIME:
+                self.index += 1
+                self.timer = 0
+                if self.index >= 2:
+                    self.index = 0
+                if self.direction == DIR_DOWN:
+                    self.image = self.down_anim[self.index]
+                elif self.direction == DIR_UP:
+                    self.image = self.up_anim[self.index]
+                elif self.direction == DIR_LEFT:
+                    self.image = self.left_anim[self.index]
+                elif self.direction == DIR_RIGHT:
+                    self.image = self.right_anim[self.index]
 
     def update_now(self):
         self.index += 1
@@ -75,3 +83,39 @@ class Hero(pygame.sprite.Sprite):
             self.image = self.left_anim[self.index]
         elif self.direction == DIR_RIGHT:
             self.image = self.right_anim[self.index]
+
+    def collidelist(self, collisionlist):
+        return self.collidebox.collidelist(collisionlist)
+
+    @property
+    def collidebox(self):
+        if self.direction == DIR_DOWN:  # x+3 by default, here -2.  y+16 by default, here +2.
+            return pygame.Rect(self.position.x+3, self.position.y+18, 26, 16)
+        if self.direction == DIR_LEFT:
+            return pygame.Rect(self.position.x+1, self.position.y+16, 26, 16)
+        if self.direction == DIR_RIGHT: # x+3 by default, here +2.
+            return pygame.Rect(self.position.x+5, self.position.y+16, 26, 16)
+        if self.direction == DIR_UP:    #              y+16 by default, here -2.
+            return pygame.Rect(self.position.x+3, self.position.y+14, 26, 16)
+
+
+    #def collide_neighbours(self, tiledmap): TODO
+
+    def move(self, direction=None):
+        if direction == None:
+            direction = self.direction
+        if not valid_dir(direction):
+            pass
+
+        if direction == DIR_DOWN:
+            self.position.y += 2
+            self.collidebox.y += 2
+        elif direction == DIR_LEFT:
+            self.position.x -= 2
+            self.collidebox.x -= 2
+        elif direction == DIR_RIGHT:
+            self.position.x += 2
+            self.collidebox.x += 2
+        else:
+            self.position.y -= 2
+            self.collidebox.y -= 2
