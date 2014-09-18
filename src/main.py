@@ -55,7 +55,6 @@ class Game(object):
 
         run = True
         while run:
-            key=pygame.key.get_pressed() 
             try:
                 event = pygame.event.wait()
                 if event.type == KEYDOWN:

@@ -10,7 +10,8 @@ class Hero(pygame.sprite.Sprite):
     def __init__(self, name="Angus", charset="../res/charsets/captain.png"):
         # Non displayable
         self.position = pygame.Rect(500, 500, 32, 32)
-        self.collision = pygame.Rect(self.position.x+3, self.position.y+16, 26, 16)
+        self.collision = pygame.Rect(self.position.x + 3,
+                                     self.position.y + 16, 26, 16)
         self.index = 0
         self.direction = DIRECTIONS['down']
         self.UPDATE_TIME = 10

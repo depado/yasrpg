@@ -8,7 +8,8 @@ class Cursor(object):
 		self.yposindex = 0
 		self.xpos = xpos
 		self.xposindex = 0
-		self.position = pygame.Rect(self.xpos[self.xposindex], self.ypos[self.yposindex], 16, 16)
+		self.position = pygame.Rect(self.xpos[self.xposindex],
+                                    self.ypos[self.yposindex], 16, 16)
 		# Animation
 		self.index = 0
 		self.update_time = 5

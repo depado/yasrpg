@@ -6,6 +6,8 @@ from pygame.locals import *
 from .cursor import Cursor
 from .settings import IMAGES_DIR, DIRECTIONS, FONT, FONT_SIZE
 
+TBK = (255, 255, 255)   # Black color tuple.
+
 class Menu(object):
     """docstring for Menu"""
     def __init__(self, screen, team, bag):
@@ -15,19 +17,23 @@ class Menu(object):
         self.screen = screen
         self.buffer = pygame.Surface(self.screen.get_size())
         self.font = pygame.font.Font(FONT, FONT_SIZE)
-        self.menu_items = ['Items','Equip','Magic','Status','Save','Close','Quit']
-        self.menu_image = pygame.image.load(IMAGES_DIR+'menu.png').convert_alpha()
-        self.cursor = Cursor(ypos=[5,30,55,80,105,130,155])
+        self.menu_items = ['Items', 'Equip', 'Magic', 'Status', 'Save',
+                           'Close', 'Quit']
+        self.menu_image = pygame.image.load(IMAGES_DIR + 'menu.png').convert_alpha()
+        self.ypos = [20, 45, 70, 95, 120, 145, 170]
+        self.cursor = Cursor(ypos=self.ypos)
         self.blitable = []
 
-        
+
     def open_menu(self):
         old_direction = self.team[0].direction
         self.team[0].direction = DIRECTIONS['down']
         self.reset_animation_team()
+
         menu = continue_game = True
         pygame.key.set_repeat()
         while menu:
+            self.clock.tick(60)
             for event in pygame.event.get():
                 if event.type == KEYDOWN:
                     if event.key == K_ESCAPE:
@@ -37,29 +43,32 @@ class Menu(object):
                     if event.key == K_UP:
                         self.cursor.move_up()
                     if event.key == K_RETURN:
-                        if self.cursor.position.y == 5:
+                        if self.cursor.position.y == self.ypos[0]:
                             self.open_items()
-                        if self.cursor.position.y == 30:
+                        if self.cursor.position.y == self.ypos[1]:
                             self.open_equipment()
-                        if self.cursor.position.y == 55:
+                        if self.cursor.position.y == self.ypos[2]:
                             self.open_magic()
-                        if self.cursor.position.y == 80:
+                        if self.cursor.position.y == self.ypos[3]:
                             self.open_status()
-                        if self.cursor.position.y == 105:
+                        if self.cursor.position.y == self.ypos[4]:
                             self.save()
-                        if self.cursor.position.y == 130:
+                        if self.cursor.position.y == self.ypos[5]:
                             menu = False
-                        if self.cursor.position.y == 155:
+                        if self.cursor.position.y == self.ypos[6]:
                             menu = continue_game = False
+                        
 
             self.buffer.blit(self.menu_image, (0,0))
             self.render_menu()
             self.render_team()
             self.render_cursor()
-            pygame.transform.scale(self.buffer, self.screen.get_size(), self.screen)
+            pygame.transform.scale(self.buffer, self.screen.get_size(),
+                                   self.screen)
             pygame.display.flip()
-            self.clock.tick(60)
-        pygame.key.set_repeat(1,5)
+        # Loop end.
+
+        pygame.key.set_repeat(1, 5)
         self.team[0].direction = old_direction
         self.team[0].update_now()
 
@@ -67,9 +76,10 @@ class Menu(object):
 
 
     def render_menu(self):
-        pos = 5
+        pos = self.ypos[0]
         for item in self.menu_items:
-            self.buffer.blit(self.font.render(item, 0, (255,255,255)), (self.buffer.get_width()-110,pos))
+            rend = self.font.render(item, 0, TBK)
+            self.buffer.blit(rend, (self.buffer.get_width() - 110, pos))
             pos += 25
 
     def render_cursor(self, animate=True):
@@ -98,16 +108,23 @@ class Menu(object):
             basey = 195
         if animate:
             char.update()
+
+        sn = str(char.name)
+        shp = "HP : " + str(char.stats.hp) + " / " + str(char.stats.maxhp)
+        smp = "MP : " + str(char.stats.mp) + " / " + str(char.stats.maxmp)
+        slv = "Level : " + str(char.stats.level)
         self.buffer.blit(char.image, pygame.Rect(20, basey, 32, 32))
-        self.buffer.blit(self.font.render(str(char.name), 0,(255,255,255)), (60, basey))
-        self.buffer.blit(self.font.render("HP : "+str(char.stats.hp)+" / "+str(char.stats.maxhp), 0,(255,255,255)), (210, basey))
-        self.buffer.blit(self.font.render("MP : "+str(char.stats.mp)+" / "+str(char.stats.maxmp), 0,(255,255,255)), (210, basey+15))
-        self.buffer.blit(self.font.render("Level : "+str(char.stats.level), 0,(255,255,255)), (60, basey+15))
+        self.buffer.blit(self.font.render(sn, 0, TBK), (60, basey))
+        self.buffer.blit(self.font.render(shp, 0, TBK), (210, basey))
+        self.buffer.blit(self.font.render(smp, 0, TBK), (210, basey + 15))
+        self.buffer.blit(self.font.render(slv, 0, TBK), (60, basey + 15))
 
     def save(self):
         # Save function goes here !
         popup = True
         while popup:
+            self.clock.tick(60)
+
             for event in pygame.event.get():
                 if event.type == KEYDOWN:
                     if event.key == K_RETURN:
@@ -117,10 +134,11 @@ class Menu(object):
             self.render_menu()
             self.render_team(animate=False)
             self.render_cursor(animate=False)
-            self.buffer.blit(self.font.render("GAME SAVED", 0,(255,255,255)), (100, 500))
-            pygame.transform.scale(self.buffer, self.screen.get_size(), self.screen)
+            self.buffer.blit(self.font.render("GAME SAVED", 0, TBK), (100, 500))
+
+            pygame.transform.scale(self.buffer, self.screen.get_size(),
+                                   self.screen)
             pygame.display.flip()
-            self.clock.tick(60)
 
     def open_items(self):
         # Open Items
@@ -128,6 +146,7 @@ class Menu(object):
         positions = len(self.bag.useable)
         itemcursor = Cursor(ypos=[25, 85, 145, 205], xpos=[0, 50, 100])
         while menu:
+            self.clock.tick(60)
             for event in pygame.event.get():
                 if event.type == KEYDOWN:
                     if event.key == K_ESCAPE:
@@ -145,19 +164,22 @@ class Menu(object):
             posy = 5
             for item in self.bag.useable:
                 if item.quantity > 0:
-                    self.buffer.blit(self.font.render("%s x%s" % (item.name, item.quantity), 0,(255,255,255)), (5, posy))
+                    sim = "%s x%s" % (item.name, item.quantity)
+                    rend = self.font.render(sim, 0, TBK)
+                    self.buffer.blit(rend, (5, posy))
                     posy += 10
             itemcursor.update()
             self.buffer.blit(itemcursor.image, itemcursor.position)
-            pygame.transform.scale(self.buffer, self.screen.get_size(), self.screen)
+            pygame.transform.scale(self.buffer, self.screen.get_size(),
+                                   self.screen)
             pygame.display.flip()
-            self.clock.tick(60)
-
+        # Loop end.
 
     def open_magic(self):
         # MAGIC ! TODO
         popup = True
         while popup:
+            self.clock.tick(60)
             for event in pygame.event.get():
                 if event.type == KEYDOWN:
                     if event.key == K_RETURN:
@@ -167,15 +189,19 @@ class Menu(object):
             self.render_menu()
             self.render_team(animate=False)
             self.render_cursor(animate=False)
-            self.buffer.blit(self.font.render("You don't have any magic... Yet...", 0,(255,255,255)), (100, 500))
-            pygame.transform.scale(self.buffer, self.screen.get_size(), self.screen)
+
+            smc = "You don't have any magic... Yet..."
+            self.buffer.blit(self.font.render(smc, 0, TBK), (100, 500))
+            pygame.transform.scale(self.buffer, self.screen.get_size(),
+                                   self.screen)
             pygame.display.flip()
-            self.clock.tick(60)
+        # Loop end.
 
     def open_equipment(self):
         # EQUIPMENT ! TODO
         popup = True
         while popup:
+            self.clock.tick(60)
             for event in pygame.event.get():
                 if event.type == KEYDOWN:
                     if event.key == K_RETURN:
@@ -185,16 +211,21 @@ class Menu(object):
             self.render_menu()
             self.render_team(animate=False)
             self.render_cursor(animate=False)
-            self.buffer.blit(self.font.render("You don't have any equipment...", 0,(255,255,255)), (100, 500))
-            self.buffer.blit(self.font.render("(Yes I'm a lazy developper...)", 0,(255,255,255)), (100, 515))
-            pygame.transform.scale(self.buffer, self.screen.get_size(), self.screen)
+
+            seq = "You don't have any equipment..."
+            sld = "(Yes I'm a lazy developper...)"
+            self.buffer.blit(self.font.render(seq, 0, TBK), (100, 500))
+            self.buffer.blit(self.font.render(sld, 0, TBK), (100, 515))
+            pygame.transform.scale(self.buffer, self.screen.get_size(),
+                                   self.screen)
             pygame.display.flip()
-            self.clock.tick(60)
+        # Loop end.
 
     def open_status(self):
         menu = True
         statuscursor = Cursor(ypos=[25, 85, 145, 205], xpos=[0])
         while menu:
+            self.clock.tick(60)
             for event in pygame.event.get():
                 if event.type == KEYDOWN:
                     if event.key == K_ESCAPE:
@@ -220,11 +251,12 @@ class Menu(object):
             self.buffer.blit(statuscursor.image, statuscursor.position)
             pygame.transform.scale(self.buffer, self.screen.get_size(), self.screen)
             pygame.display.flip()
-            self.clock.tick(60)
+        # Loop end.
 
     def status(self, char):
         menu = True
         while menu:
+            self.clock.tick(60)
             for event in pygame.event.get():
                 if event.type == KEYDOWN:
                     if event.key == K_ESCAPE:
@@ -232,16 +264,16 @@ class Menu(object):
 
             self.buffer.blit(self.menu_image, (0,0))
             self.render_char(char, 1)
-            self.buffer.blit(self.font.render("Skills", 0,(255,255,255)), (60, 45))
-            self.buffer.blit(self.font.render("Stats", 0,(255,255,255)), (60, 60))
-            self.buffer.blit(self.font.render("Strength : %d" % char.stats.str, 0,(255,255,255)), (60, 75))
-            self.buffer.blit(self.font.render("Defense : %d" % char.stats.defense, 0,(255,255,255)), (300, 75))
-            self.buffer.blit(self.font.render("Intelligence : %d" % char.stats.int, 0,(255,255,255)), (60, 90))
-            self.buffer.blit(self.font.render("Magic Defense : %d" % char.stats.mdefense, 0,(255,255,255)), (300, 90))
-            self.buffer.blit(self.font.render("Dexterity : %d" % char.stats.dex, 0,(255,255,255)), (60, 105))
+            self.buffer.blit(self.font.render("Skills", 0, TBK), (60, 45))
+            self.buffer.blit(self.font.render("Stats", 0, TBK), (60, 60))
+            self.buffer.blit(self.font.render("Strength : %d" % char.stats.str, 0, TBK), (60, 75))
+            self.buffer.blit(self.font.render("Defense : %d" % char.stats.defense, 0, TBK), (300, 75))
+            self.buffer.blit(self.font.render("Intelligence : %d" % char.stats.int, 0, TBK), (60, 90))
+            self.buffer.blit(self.font.render("Magic Defense : %d" % char.stats.mdefense, 0, TBK), (300, 90))
+            self.buffer.blit(self.font.render("Dexterity : %d" % char.stats.dex, 0, TBK), (60, 105))
             pygame.transform.scale(self.buffer, self.screen.get_size(), self.screen)
             pygame.display.flip()
-            self.clock.tick(60)
+        # Loop end.
 
         self.reset_animation_team()
         
