@@ -109,13 +109,9 @@ class Hero(pygame.sprite.Sprite):
 
         if direction == DIR_DOWN:
             self.position.y += 2
-            self.collidebox.y += 2
         elif direction == DIR_LEFT:
             self.position.x -= 2
-            self.collidebox.x -= 2
         elif direction == DIR_RIGHT:
             self.position.x += 2
-            self.collidebox.x += 2
         else:
             self.position.y -= 2
-            self.collidebox.y -= 2
