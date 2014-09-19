@@ -6,16 +6,12 @@ from classes.hero import Hero
 from classes.cursor import Cursor
 from classes.menu import Menu
 from classes.inventory import Item, Bag
-import classes.settings as settings
+from classes.settings import *
 import sys
 import pygame
 from pygame.locals import *
 import math
 
-CHARSET_DIR = settings.CHARSET_DIR
-MAPS_DIR = settings.MAPS_DIR
-IMAGES_DIR = settings.IMAGES_DIR
-DIRECTIONS = settings.DIRECTIONS
 pygame.init()
 screen = pygame.display.set_mode((640, 640))
 screen_buf = pygame.Surface(screen.get_size())
@@ -29,8 +25,8 @@ bag = Bag()
 randobject = Item(name="Random !", quantity=2, effect="None")
 bag.useable.append(randobject)
 
-for item in bag.useable:
-    print("Name : %s\nQuantity : %s\nEffect : %s" % (item.name, item.quantity, item.effect))
+#for item in bag.useable:
+#    print("Name : %s\nQuantity : %s\nEffect : %s" % (item.name, item.quantity, item.effect))
 
 hawk.stats.hp -= 10
 hawk.stats.level = 15
@@ -55,58 +51,33 @@ class Game(object):
 
         run = True
         while run:
-            key=pygame.key.get_pressed() 
             try:
                 event = pygame.event.wait()
                 if event.type == KEYDOWN:
+                    arrow_pressed = False
                     if (event.key == K_LEFT):
-                        if angus.direction != DIRECTIONS['left']:
-                            angus.direction = DIRECTIONS['left']
-                            angus.update_now()
-                        else:
-                            angus.update()
-                        testrect = pygame.Rect(angus.collision.x-2, angus.collision.y, 26, 16 )
-                        if testrect.collidelist(formosa.boxcollider) == -1:
-                            angus.position.x -= 2
-                            angus.collision.x -= 2
+                        angus.update(DIR_LEFT)
+                        arrow_pressed = True
 
                     # KEY RIGHT
-                    elif (event.key == K_RIGHT):
-                        if angus.direction != DIRECTIONS['right']:
-                            angus.direction = DIRECTIONS['right']
-                            angus.update_now()
-                        else:
-                            angus.update()
-                        testrect = pygame.Rect(angus.collision.x+2, angus.collision.y, 26, 16 )
-                        if testrect.collidelist(formosa.boxcollider) == -1:
-                            angus.position.x += 2
-                            angus.collision.x += 2
+                    if (event.key == K_RIGHT):
+                        angus.update(DIR_RIGHT)
+                        arrow_pressed = True
 
                     # KEY UP
-                    elif (event.key == K_UP):
-                        if angus.direction != DIRECTIONS['up']:
-                            angus.direction = DIRECTIONS['up']
-                            angus.update_now()
-                        else:
-                            angus.update()
-                        testrect = pygame.Rect(angus.collision.x, angus.collision.y-2, 26, 16 )
-                        if testrect.collidelist(formosa.boxcollider) == -1:
-                            angus.position.y -= 2
-                            angus.collision.y -= 2
+                    if (event.key == K_UP):
+                        angus.update(DIR_UP)
+                        arrow_pressed = True
 
                     # KEY DOWN        
-                    elif (event.key == K_DOWN):
-                        if angus.direction != DIRECTIONS['down']:
-                            angus.direction = DIRECTIONS['down']
-                            angus.update_now()
-                        else:
-                            angus.update()
-                        testrect = pygame.Rect(angus.collision.x, angus.collision.y+2, 26, 16 )
-                        if testrect.collidelist(formosa.boxcollider) == -1:
-                            angus.position.y += 2
-                            angus.collision.y += 2
+                    if (event.key == K_DOWN):
+                        angus.update(DIR_DOWN)
+                        arrow_pressed = True
 
-                    elif (event.key == K_ESCAPE):
+                    if arrow_pressed and angus.collidelist(formosa.boxcollider) == -1:
+                        angus.move()
+
+                    if (event.key == K_ESCAPE):
                         menu = Menu(screen, team, bag)
                         run = menu.open_menu()
 
@@ -128,5 +99,5 @@ class Game(object):
         pygame.quit()
 
 game = Game()
-game.game(MAPS_DIR+"map.tmx")
+game.game(MAPS_DIR + "map.tmx")
 game.quit()
